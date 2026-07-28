@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LETRAR+ | Jogo de Alfabetização</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ====== BARRA SUPERIOR ====== -->
+<header class="topbar">
+  <div class="topbar-brand" id="btnHome" role="button" tabindex="0" aria-label="Voltar ao início">
+    <span class="brand-icon">🦉</span>
+    <span class="brand-text">LETRAR<strong>+</strong></span>
+  </div>
+
+  <div class="topbar-stats">
+    <div class="stat-chip" title="Estrelas conquistadas">
+      <span class="stat-icon">⭐</span>
+      <span id="statStars">0</span>
+    </div>
+    <div class="stat-chip" title="Medalhas conquistadas">
+      <span class="stat-icon">🏅</span>
+      <span id="statMedals">0</span>
+    </div>
+    <div class="stat-chip" title="Personagem atual">
+      <span class="stat-icon" id="statCharacter">🐣</span>
+    </div>
+    <div class="stat-chip profile-btn" id="btnPerfil" role="button" tabindex="0" title="Ver perfil e conquistas">
+      <span class="stat-icon">👤</span>
+      <span class="profile-label">Perfil</span>
+    </div>
+  </div>
+</header>
+
+<div class="progress-track" aria-hidden="true">
+  <div class="progress-fill" id="globalProgressFill"></div>
+</div>
+
+<main id="app">
+
+  <!-- ====== CRIAÇÃO DE PERFIL (ONBOARDING) ====== -->
+  <section class="screen" id="screen-boasvindas" data-screen="boasvindas">
+    <div class="onboarding-card">
+      <div class="onboarding-mascot">🦉</div>
+      <p class="eyebrow">Projeto LETRAR+</p>
+      <h1>Vamos criar seu perfil!</h1>
+      <p class="onboarding-sub">Antes de começar a jogar, conte pra gente como podemos te chamar.</p>
+
+      <label class="onboarding-label" for="ob-nome">Seu nome</label>
+      <input type="text" id="ob-nome" maxlength="20" placeholder="Digite seu nome" autocomplete="off">
+
+      <p class="onboarding-label">Escolha seu avatar</p>
+      <div class="avatar-picker" id="ob-avatares"></div>
+
+      <p class="onboarding-error" id="ob-erro"></p>
+      <button class="btn-primary" id="ob-comecar">Começar a jogar 🚀</button>
+    </div>
+  </section>
+
+  <!-- ====== HOME ====== -->
+  <section class="screen" id="screen-home" data-screen="home">
+    <div class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Projeto LETRAR+ · Educação Básica</p>
+        <p class="home-greeting" id="homeGreeting"></p>
+        <h1>Aprender a ler é uma aventura! 🚀</h1>
+        <p class="hero-sub">Escolha uma missão e comece a jogar. A cada acerto você ganha estrelas, medalhas e desbloqueia novos amigos.</p>
+      </div>
+      <div class="hero-mascot" aria-hidden="true">🦉</div>
+    </div>
+
+    <h2 class="section-title">Escolha sua missão</h2>
+    <div class="grid-cards" id="modeGrid"><!-- gerado via JS --></div>
+  </section>
+
+  <!-- ====== 1. CAÇA ÀS LETRAS ====== -->
+  <section class="screen" id="screen-cacaletras" data-screen="cacaletras">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🔎 Caça às Letras</p>
+      <h2>Encontre a letra pedida</h2>
+      <p class="game-instructions">Toque na letra correta o mais rápido que puder!</p>
+      <div class="round-info">
+        <span id="cl-round">Rodada 1 de 5</span>
+      </div>
+      <div class="target-letter-box">
+        <span>Encontre a letra</span>
+        <div class="target-letter" id="cl-target">A</div>
+      </div>
+      <div class="options-grid" id="cl-options"></div>
+      <div class="feedback-area" id="cl-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 2. QUAL É O SOM? ====== -->
+  <section class="screen" id="screen-qualsom" data-screen="qualsom">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🔊 Qual é o Som?</p>
+      <h2>Escute e escolha a letra certa</h2>
+      <p class="game-instructions">Toque no alto-falante para ouvir o som e escolha a letra correspondente.</p>
+      <div class="round-info"><span id="qs-round">Rodada 1 de 5</span></div>
+      <button class="btn-sound" id="qs-play" aria-label="Ouvir som">🔊 Ouvir novamente</button>
+      <div class="options-grid" id="qs-options"></div>
+      <div class="feedback-area" id="qs-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 3. MONTE A SÍLABA ====== -->
+  <section class="screen" id="screen-silaba" data-screen="silaba">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🧩 Monte a Sílaba</p>
+      <h2>Arraste ou toque para formar a sílaba</h2>
+      <p class="game-instructions">Combine a consoante com a vogal para formar a sílaba pedida. Em telas de toque, toque na peça e depois no espaço.</p>
+      <div class="round-info"><span id="sl-round">Sílaba 1 de 4</span></div>
+      <div class="syllable-target">Forme: <strong id="sl-target">BA</strong></div>
+      <div class="slot-row" id="sl-slots">
+        <div class="tile-slot" data-slot="0">?</div>
+        <div class="tile-slot" data-slot="1">?</div>
+      </div>
+      <div class="tile-bank" id="sl-bank"></div>
+      <button class="btn-primary" id="sl-check">Conferir</button>
+      <div class="feedback-area" id="sl-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 4. COMPLETE A PALAVRA ====== -->
+  <section class="screen" id="screen-completapalavra" data-screen="completapalavra">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">✏️ Complete a Palavra</p>
+      <h2>Qual letra falta?</h2>
+      <div class="round-info"><span id="cp-round">Rodada 1 de 5</span></div>
+      <div class="word-emoji" id="cp-emoji">🍎</div>
+      <div class="word-blank" id="cp-word">MA_Ã</div>
+      <div class="options-grid" id="cp-options"></div>
+      <div class="feedback-area" id="cp-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 5. LIGUE A PALAVRA À IMAGEM ====== -->
+  <section class="screen" id="screen-ligaimagem" data-screen="ligaimagem">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🔗 Ligue a Palavra à Imagem</p>
+      <h2>Toque na palavra e depois na imagem certa</h2>
+      <div class="round-info"><span id="li-round">Pares encontrados: 0 de 4</span></div>
+      <div class="match-columns">
+        <div class="match-col" id="li-words"></div>
+        <div class="match-col" id="li-images"></div>
+      </div>
+      <div class="feedback-area" id="li-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 6. MEMÓRIA DAS LETRAS ====== -->
+  <section class="screen" id="screen-memoria" data-screen="memoria">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🧠 Memória das Letras</p>
+      <h2>Encontre os pares iguais</h2>
+      <div class="round-info"><span id="mm-round">Pares: 0 de 6 · Tentativas: 0</span></div>
+      <div class="memory-grid" id="mm-grid"></div>
+      <div class="feedback-area" id="mm-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 7. ORDENE AS SÍLABAS ====== -->
+  <section class="screen" id="screen-ordenesilabas" data-screen="ordenesilabas">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">🔀 Ordene as Sílabas</p>
+      <h2>Toque nas sílabas na ordem certa</h2>
+      <p class="game-instructions" id="os-hint">Forme uma palavra com as sílabas embaralhadas.</p>
+      <div class="round-info"><span id="os-round">Rodada 1 de 5</span></div>
+      <div class="answer-row" id="os-answer"></div>
+      <div class="tile-bank" id="os-bank"></div>
+      <div class="action-row">
+        <button class="btn-secondary" id="os-clear">Limpar</button>
+        <button class="btn-primary" id="os-check">Conferir</button>
+      </div>
+      <div class="feedback-area" id="os-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 8. MISSÃO DAS EMOÇÕES ====== -->
+  <section class="screen" id="screen-emocoes" data-screen="emocoes">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">💛 Missão das Emoções</p>
+      <h2>O que você faria?</h2>
+      <div class="round-info"><span id="em-round">Situação 1 de 4</span></div>
+      <div class="scenario-box" id="em-scenario">Texto da situação aqui</div>
+      <div class="options-grid emotion-grid" id="em-options"></div>
+      <div class="feedback-area" id="em-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== 9. TRILHA DO CONHECIMENTO ====== -->
+  <section class="screen" id="screen-trilha" data-screen="trilha">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card trilha-card">
+      <p class="game-eyebrow">🗺️ Trilha do Conhecimento</p>
+      <h2>Avance pelas casas e chegue ao final!</h2>
+      <div class="trail-track" id="trilha-track"></div>
+      <div class="trilha-challenge" id="trilha-challenge" style="display:none;">
+        <h3 id="tr-title"></h3>
+        <div id="tr-body"></div>
+        <div class="feedback-area" id="tr-feedback"></div>
+      </div>
+      <div class="trilha-finish" id="trilha-finish" style="display:none;">
+        <div class="big-reward">🏆</div>
+        <h3>Você concluiu a trilha!</h3>
+        <p>Recompensa desbloqueada.</p>
+        <button class="btn-primary" id="tr-restart">Jogar novamente</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 10. DESAFIO DO DIA ====== -->
+  <section class="screen" id="screen-desafio" data-screen="desafio">
+    <button class="btn-back">← Voltar</button>
+    <div class="game-card">
+      <p class="game-eyebrow">📅 Desafio do Dia</p>
+      <h2 id="dd-date">Desafios de hoje</h2>
+      <p class="game-instructions">Complete as 5 pequenas missões abaixo para ganhar a medalha do dia.</p>
+      <div class="daily-list" id="dd-list"></div>
+      <div class="feedback-area" id="dd-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ====== PERFIL / CONQUISTAS ====== -->
+  <section class="screen" id="screen-perfil" data-screen="perfil">
+    <button class="btn-back">← Voltar</button>
+
+    <div class="profile-hero">
+      <div class="profile-avatar" id="perfilAvatar"><img id="perfilAvatarImg" src="" alt="Seu avatar"></div>
+      <div class="profile-info">
+        <p class="game-eyebrow">Meu Perfil</p>
+        <h1 class="profile-name" id="perfilNome">Seu nome</h1>
+        <div class="companion-badge" id="companionBadge">
+          <span class="companion-icon" id="companionIcon">🐣</span>
+          <span>Amigo: <strong id="companionNome">Pintinho Aprendiz</strong></span>
+        </div>
+        <div class="profile-stats-row">
+          <div class="profile-stat"><span class="profile-stat-icon">⭐</span><span id="perfilStars">0</span><small>estrelas</small></div>
+          <div class="profile-stat"><span class="profile-stat-icon">🏅</span><span id="perfilMedals">0</span><small>medalhas</small></div>
+          <div class="profile-stat"><span class="profile-stat-icon">🎮</span><span id="perfilJogos">0</span><small>missões concluídas</small></div>
+        </div>
+        <div class="profile-next">
+          <div class="mini-progress-track"><div class="mini-progress-fill" id="perfilProgressFill"></div></div>
+          <span id="perfilNextText">Faltam 15 estrelas para o próximo amigo</span>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-secondary" id="btnEditarPerfil">✏️ Editar perfil</button>
+          <button class="btn-danger" id="btnResetarProgresso">🗑️ Resetar progresso</button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-title dark">🏅 Mural de Medalhas</h3>
+    <p class="section-sub">Medalhas são conquistas raras, com níveis de bronze, prata e ouro.</p>
+    <div class="medal-grid" id="medalhasGrid"></div>
+
+    <h3 class="section-title dark">🏆 Conquistas</h3>
+    <div class="achv-grid" id="achvGrid"></div>
+  </section>
+
+</main>
+
+<!-- ====== MODAL DE RECOMPENSA ====== -->
+<div class="reward-overlay" id="rewardOverlay">
+  <div class="reward-modal">
+    <div class="reward-emoji" id="rewardEmoji">⭐</div>
+    <h3 id="rewardTitle">Muito bem!</h3>
+    <p id="rewardText">Você ganhou 1 estrela.</p>
+    <button class="btn-primary" id="rewardClose">Continuar</button>
+  </div>
+</div>
+
+<div class="reward-overlay" id="confirmOverlay">
+  <div class="reward-modal">
+    <div class="reward-emoji">⚠️</div>
+    <h3>Resetar todo o progresso?</h3>
+    <p>Isso vai apagar estrelas, medalhas e conquistas. Seu nome e avatar continuam salvos. Essa ação não pode ser desfeita.</p>
+    <div class="confirm-actions">
+      <button class="btn-secondary" id="confirmCancelar">Cancelar</button>
+      <button class="btn-danger" id="confirmOk">Sim, resetar</button>
+    </div>
+  </div>
+</div>
+
+<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
