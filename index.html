@@ -5,16 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LETRAR+ | Jogo de Alfabetização</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <!-- ====== BARRA SUPERIOR ====== -->
 <header class="topbar">
-  <div class="topbar-brand" id="btnHome" role="button" tabindex="0" aria-label="Voltar ao início">
-    <span class="brand-icon">🦉</span>
-    <span class="brand-text">LETRAR<strong>+</strong></span>
+  <div class="topbar-left">
+    <button class="menu-toggle" id="btnMenu" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="sideMenu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-brand" id="btnHome" role="button" tabindex="0" aria-label="Voltar ao início">
+      <span class="brand-icon">🦉</span>
+      <span class="brand-text">LETRAR<strong>+</strong></span>
+    </div>
   </div>
 
   <div class="topbar-stats">
@@ -39,6 +44,17 @@
 <div class="progress-track" aria-hidden="true">
   <div class="progress-fill" id="globalProgressFill"></div>
 </div>
+
+<!-- ====== MENU LATERAL ====== -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="side-menu" id="sideMenu" aria-label="Menu principal" aria-hidden="true">
+  <div class="side-menu-head">
+    <div class="side-menu-brand"><span aria-hidden="true">🦉</span><span>LETRAR<strong>+</strong></span></div>
+    <button class="side-menu-close" id="menuClose" type="button" aria-label="Fechar menu">✕</button>
+  </div>
+  <div class="menu-user" id="menuUser"></div>
+  <ul class="side-menu-list" id="menuList"></ul>
+</nav>
 
 <main id="app">
 
@@ -228,7 +244,14 @@
     <div class="game-card">
       <p class="game-eyebrow">📅 Desafio do Dia</p>
       <h2 id="dd-date">Desafios de hoje</h2>
-      <p class="game-instructions">Complete as 5 pequenas missões abaixo para ganhar a medalha do dia.</p>
+      <p class="game-instructions" id="dd-intro">Acerte o que pede cada missão abaixo para ganhar a medalha do dia. Depois de concluir, o desafio fica bloqueado por 24 horas.</p>
+      <div class="dd-lock" id="dd-lock" hidden>
+        <div class="dd-lock-icon" aria-hidden="true">🔒</div>
+        <h3>Desafio concluído! Parabéns!</h3>
+        <p>Um novo desafio libera em:</p>
+        <div class="dd-countdown" id="dd-countdown" data-countdown role="timer" aria-live="off">24:00:00</div>
+        <small>Descanse, brinque e volte depois. Você pode jogar as outras missões enquanto espera.</small>
+      </div>
       <div class="daily-list" id="dd-list"></div>
       <div class="feedback-area" id="dd-feedback"></div>
     </div>
@@ -269,6 +292,83 @@
 
     <h3 class="section-title dark">🏆 Conquistas</h3>
     <div class="achv-grid" id="achvGrid"></div>
+  </section>
+
+  <!-- ====== ACOMPANHAMENTO ====== -->
+  <section class="screen" id="screen-acompanhamento" data-screen="acompanhamento">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap">
+      <h2 class="page-title">📈 Acompanhamento do aprendizado</h2>
+      <p class="page-sub">Veja como a criança está evoluindo: progresso, acertos e erros, habilidades e o que ainda precisa de prática.</p>
+      <div id="acBody"></div>
+    </div>
+  </section>
+
+  <!-- ====== MINHAS ATIVIDADES ====== -->
+  <section class="screen" id="screen-atividades" data-screen="atividades">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap wide">
+      <h2 class="page-title">🎮 Minhas atividades</h2>
+      <p class="page-sub">Todas as missões do LETRAR+ e quantas vezes você já concluiu cada uma.</p>
+      <div class="grid-cards" id="atvGrid"></div>
+    </div>
+  </section>
+
+  <!-- ====== MINHAS CONQUISTAS ====== -->
+  <section class="screen" id="screen-conquistas" data-screen="conquistas">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap wide">
+      <h2 class="page-title">🏆 Minhas conquistas</h2>
+      <p class="page-sub" id="conqResumo"></p>
+      <h3 class="section-title dark">🏅 Medalhas</h3>
+      <div class="medal-grid" id="medalhasGrid2"></div>
+      <h3 class="section-title dark">🏆 Conquistas</h3>
+      <div class="achv-grid" id="achvGrid2"></div>
+    </div>
+  </section>
+
+  <!-- ====== BIBLIOTECA ====== -->
+  <section class="screen" id="screen-biblioteca" data-screen="biblioteca">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap wide">
+      <h2 class="page-title">📚 Biblioteca</h2>
+      <p class="page-sub">Um cantinho para estudar com calma: toque nas letras, sílabas e palavras para ouvir.</p>
+      <div class="bib-tabs" id="bibTabs" role="tablist"></div>
+      <div class="bib-panel" id="bibBody"></div>
+    </div>
+  </section>
+
+  <!-- ====== CONFIGURAÇÕES ====== -->
+  <section class="screen" id="screen-configuracoes" data-screen="configuracoes">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap">
+      <h2 class="page-title">⚙️ Configurações</h2>
+      <p class="page-sub">Deixe o LETRAR+ do jeito que fica melhor para você. As escolhas ficam salvas.</p>
+      <div class="cfg-card" id="cfgBody"></div>
+    </div>
+  </section>
+
+  <!-- ====== SOBRE ====== -->
+  <section class="screen" id="screen-sobre" data-screen="sobre">
+    <button class="btn-back">← Voltar</button>
+    <div class="page-wrap">
+      <h2 class="page-title">ℹ️ Sobre o LETRAR+</h2>
+      <div class="about-card">
+        <p>O <strong>LETRAR+</strong> é um jogo educacional digital que apoia a alfabetização infantil por meio da integração entre tecnologia, ludicidade e práticas pedagógicas inclusivas.</p>
+        <h3>Para que serve</h3>
+        <p>Estimular o reconhecimento de letras, fonemas, sílabas, palavras e imagens, fortalecendo habilidades cognitivas, linguísticas e socioemocionais de forma motivadora, respeitando diferentes ritmos de aprendizagem.</p>
+        <h3>O que você encontra</h3>
+        <ul>
+          <li>10 atividades progressivas, como Caça às Letras, Qual é o Som?, Memória das Letras e Missão das Emoções.</li>
+          <li>Estrelas, medalhas, personagens que evoluem, barra de progresso e feedback positivo a cada acerto.</li>
+          <li>Acompanhamento do aprendizado para professores e familiares.</li>
+          <li>Recursos de acessibilidade: letras maiores, alto contraste, fonte de leitura fácil, voz de leitura e animações opcionais.</li>
+        </ul>
+        <h3>Projeto</h3>
+        <p>Protótipo funcional desenvolvido para o Encontro Estudantil da Rede Estadual da Bahia, alinhado aos princípios de inovação e justiça social, com o objetivo de fortalecer a qualidade da educação pública e incentivar o protagonismo estudantil.</p>
+        <p class="about-version">Versão: protótipo · HTML, CSS e JavaScript puros</p>
+      </div>
+    </div>
   </section>
 
 </main>
